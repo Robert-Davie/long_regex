@@ -5,7 +5,7 @@ An alternative to regex which avoids the cryptic strings. The module provides a 
 e.g. to find a two digit number in LRegex you could write:
 
 ```
-digit repeatExactly 2
+digit repeat_exactly 2
 ```
 
 and then translate into normal regex using the ```from_lregex``` function.
@@ -13,7 +13,7 @@ and then translate into normal regex using the ```from_lregex``` function.
 ```
 example_text = "23 1 45 92 13 ABCdef"
 
-pattern = from_lregex(r"digit repeatExactly 2")
+pattern = from_lregex(r"digit repeat_exactly 2")
 re.findall(pattern, example_text)
 ```
 returns

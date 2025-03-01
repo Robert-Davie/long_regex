@@ -1,3 +1,6 @@
+from valid_words import ValidWords
+
+
 def from_lregex(input_in):
     input_in = input_in.split(" ")
     pointer = 0
@@ -5,10 +8,13 @@ def from_lregex(input_in):
     bracket_stack = []
     while pointer < len(input_in):
         current_word = input_in[pointer]
+        next_word = None
+        if pointer + 1 != len(input_in):
+            next_word = input_in[pointer + 1]
         if not current_word:
             pointer += 1
             continue
-        if current_word[0] == "%":
+        if current_word[0] == ValidWords.PERCENT.value:
             temp = current_word[1:]
             for i in ".^$|?*()[]{}+":
                 temp = temp.replace(i, "\\" + i )
@@ -16,101 +22,101 @@ def from_lregex(input_in):
         if len(current_word) == 6 and current_word[:5] == "group":
             total.append("\\" + current_word[5])
         match current_word:
-            case "stringStart":
+            case ValidWords.STRING_START.value:
                 total.append("\\A")
-            case "stringEnd":
+            case ValidWords.STRING_END.value:
                 total.append("\\Z")
-            case "anyChar":
+            case ValidWords.ANY_CHAR.value:
                 total.append(".")
-            case "or":
+            case ValidWords.OR.value:
                 total.append("|")
-            case "lookAhead":
-                if input_in[pointer + 1] == "(":
+            case ValidWords.LOOK_AHEAD.value:
+                if next_word== "(":
                     total.append("(?=")
                     pointer += 1
                     bracket_stack.append(")")
-            case "xLookAhead":
-                if input_in[pointer + 1] == "(":
+            case ValidWords.X_LOOK_AHEAD.value:
+                if next_word == "(":
                     total.append("(?!")
                     pointer += 1
                     bracket_stack.append(")")
-            case "xOption":
-                if input_in[pointer + 1] == "(":
+            case ValidWords.X_CHOICE.value:
+                if next_word == "(":
                     total.append("[^")
                     pointer += 1
                     bracket_stack.append("]")
-            case "min0":
+            case ValidWords.MIN0.value:
                 total.append("*")
-            case "max1":
+            case ValidWords.MAX1.value:
                 total.append("?")
-            case "min1":
+            case ValidWords.MIN1.value:
                 total.append("+")
-            case "start":
+            case ValidWords.START.value:
                 total.append("^")
-            case "end":
+            case ValidWords.END.value:
                 total.append("$")
-            case "boundary":
+            case ValidWords.BOUNDARY.value:
                 total.append("\\b")
-            case "xBoundary":
+            case ValidWords.X_BOUNDARY.value:
                 total.append("\\B")
-            case "digit":
+            case ValidWords.DIGIT.value:
                 total.append("\\d")
-            case "xDigit":
+            case ValidWords.X_DIGIT.value:
                 total.append("\\D")
-            case "space":
+            case ValidWords.WHITESPACE.value:
                 total.append("\\s")
-            case "xSpace":
+            case ValidWords.X_WHITESPACE.value:
                 total.append("\\S")
-            case "word":
+            case ValidWords.WORD.value:
                 total.append("\\w")
-            case "xWord":
+            case ValidWords.X_WORD.value:
                 total.append("\\W")
-            case "repeatExactly":
-                total.append("{" + input_in[pointer + 1] + "}")
+            case ValidWords.REPEAT_EXACTLY.value:
+                total.append("{" + next_word + "}")
                 pointer += 1
-            case "atLeast":
-                total.append("{" + input_in[pointer + 1] + ",}")
+            case ValidWords.AT_LEAST.value:
+                total.append("{" + next_word + ",}")
                 pointer += 1
-            case "repeat":
+            case ValidWords.REPEAT.value:
                 if all([
-                    input_in[pointer + 1] == "(",
+                    next_word == "(",
                     input_in[pointer + 4] == ")"
                 ]):
                     total.append("{" + f"{input_in[pointer + 2]},{input_in[pointer + 3]}" + "}")
                     pointer += 4
-            case "range":
+            case ValidWords.RANGE.value:
                 if all([
-                    input_in[pointer + 1] == "(",
+                    next_word == "(",
                     input_in[pointer + 4] == ")"
                 ]):
                     total.append(f"{input_in[pointer + 2]}-{input_in[pointer + 3]}")
                     pointer += 4
-            case "option":
-                if input_in[pointer + 1] == "(":
+            case ValidWords.CHOICE.value:
+                if next_word == "(":
                     total.append("[")
                     pointer += 1
                     bracket_stack.append("]")
-            case "capture":
-                if input_in[pointer + 1] == "(":
+            case ValidWords.CAPTURE.value:
+                if next_word == "(":
                     total.append("(")
                     pointer += 1
                     bracket_stack.append(")")
-            case "xCapture":
-                if input_in[pointer + 1] == "(":
+            case ValidWords.X_CAPTURE.value:
+                if next_word == "(":
                     total.append("(?:")
                     pointer += 1
                     bracket_stack.append(")")
-            case "namedCapture":
-                if input_in[pointer + 1] == "(":
+            case ValidWords.NAMED_CAPTURE.value:
+                if next_word == "(":
                     total.append(f"(?P<{input_in[pointer + 2]}>")
                     pointer += 2
                     bracket_stack.append(")")
-            case "reuseCapture":
-                total.append(f"(?P={input_in[pointer + 1]})")
+            case ValidWords.REUSE_CAPTURE.value:
+                total.append(f"(?P={next_word})")
                 pointer += 1
-            case "nonGreedy":
+            case ValidWords.X_GREEDY.value:
                 total.append("?")
-            case "xBacktrack":
+            case ValidWords.X_BACKTRACK.value:
                 total.append("+")
             case ")":
                 total.append(bracket_stack.pop())
