@@ -1,0 +1,136 @@
+from from_lregex import *
+import re
+
+
+def test_start():
+    long = "start"
+    short = "^"
+    assert from_lregex(long) == short
+
+
+def test_choice():
+    long = "choice ( %ab )"
+    short = "[ab]"
+    assert from_lregex(long) == short
+
+
+def test_range():
+    long = "range ( 1 7 )"
+    short = "1-7"
+    assert from_lregex(long) == short
+
+
+def test_poker_hands():
+    long = "start choice ( %a range ( 2 9 ) %tjqk ) repeatExactly 5 end"
+    short = "^[a2-9tjqk]{5}$"
+    assert from_lregex(long) == short
+
+
+def test_long_match_2():
+    long = "anyChar min0 capture ( anyChar ) anyChar min0 group1"
+    short = r".*(.).*\1"
+    assert from_lregex(long) == short
+
+
+def test_get_number():
+    # e.g. -7, 3, 4 -10 etc
+    long = "choice ( %-+ ) min0max1 digit min1"
+    short = r"[-+]?\d+"
+    assert from_lregex(long) == short
+
+
+def test_long_match_3():
+    long = ""
+    long += "choice ( %-+ ) min0max1 "
+    a = r"%0 choice ( %xX ) choice ( digit range ( A F ) range ( a f ) ) min1 "
+    b = r"%0 choice ( range ( 0 7 ) ) min0 "
+    c = "digit min1 "
+    long += f"capture ( {a} or {b} or {c})"
+    short = r"[-+]?(0[xX][\dA-Fa-f]+|0[0-7]*|\d+)"
+    assert from_lregex(long) == short
+
+
+def test_non_greedy():
+    long = "%1 min1 nonGreedy"
+    short = "1+?"
+    assert from_lregex(long) == short
+
+
+def test_non_backtrack():
+    long = "%1 min0 nonBacktrack"
+    short = "1*+"
+    assert from_lregex(long) == short
+
+
+def test_escaped_percent():
+    long = "%%"
+    short = "%"
+    assert from_lregex(long) == short
+
+
+def test_repeat_between():
+    long = "%A repeat ( 2 5 )"
+    short = "A{2,5}"
+    assert from_lregex(long) == short
+
+
+def test_at_least():
+    long = "%B atLeast 12"
+    short = "B{12,}"
+    assert from_lregex(long) == short
+
+
+def test_boundary():
+    long = "boundary %class boundary"
+    short = r"\bclass\b"
+    assert from_lregex(long) == short
+
+
+def test_detect_double_words():
+    long = "boundary capture ( word min1 ) space min1 group1 boundary"
+    short = from_lregex(long)
+    assert short == r'\b(\w+)\s+\1\b'
+    p = re.compile(short)
+    assert p.search('Paris in the the spring').group() == 'the the'
+
+
+def test_negative_lookahead():
+    long = r"anyChar min0 choice ( anyChar ) negativeLookAhead ( %bat end ) negateChoice ( anyChar ) min0 end"
+    short = r".*[.](?!bat$)[^.]*$"
+    assert from_lregex(long) == short
+
+
+def test_positive_lookahead():
+    long = r"lookAhead ( %G )"
+    short = r"(?=G)"
+    assert from_lregex(long) == short
+
+
+def test_non_capture():
+    long = r"nonCapture ( %Hello )"
+    short =r"(?:Hello)"
+    assert from_lregex(long) == short
+
+
+def test_named_capture():
+    long = r"namedCapture ( myGroup %Apple )"
+    short = r"(?P<myGroup>Apple)"
+    assert from_lregex(long) == short
+
+
+def test_reuse_capture():
+    long = r"namedCapture ( myGroup %Apple ) reuseCapture myGroup"
+    short = r"(?P<myGroup>Apple)(?P=myGroup)"
+    assert from_lregex(long) == short
+
+
+def test_string_start_and_end():
+    long = r"stringStart stringEnd"
+    short = "\\A\\Z"
+    assert from_lregex(long) == short
+
+
+def test_example_readme_code_1():
+    example_text = "23 1 45 92 13 ABCdef"
+    pattern = from_lregex(r"digit repeatExactly 2")
+    assert re.findall(pattern, example_text) == ["23", "45", "92", "13"]
