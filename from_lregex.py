@@ -10,7 +10,7 @@ def from_lregex(input_in):
             continue
         if current_word[0] == "%":
             temp = current_word[1:]
-            for i in ".":
+            for i in ".^$|?*()[]{}+":
                 temp = temp.replace(i, "\\" + i )
             total.append(temp)
         if len(current_word) == 6 and current_word[:5] == "group":

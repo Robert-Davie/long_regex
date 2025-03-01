@@ -35,7 +35,7 @@ def test_long_match_2():
 def test_get_number():
     # e.g. -7, 3, 4 -10 etc
     long = "option ( %-+ ) max1 digit min1"
-    short = r"[-+]?\d+"
+    short = r"[-\+]?\d+"
     assert from_lregex(long) == short
 
 
@@ -46,7 +46,7 @@ def test_long_match_3():
     b = r"%0 option ( range ( 0 7 ) ) min0 "
     c = "digit min1 "
     long += f"capture ( {a} or {b} or {c})"
-    short = r"[-+]?(0[xX][\dA-Fa-f]+|0[0-7]*|\d+)"
+    short = r"[-\+]?(0[xX][\dA-Fa-f]+|0[0-7]*|\d+)"
     assert from_lregex(long) == short
 
 
@@ -151,3 +151,4 @@ def test_escape_backslash():
 def test_escaped_punctuation():
     long = r"%.^$|?*()[]{}+"
     short = r"\.\^\$\|\?\*\(\)\[\]\{\}\+"
+    assert from_lregex(long) == short
