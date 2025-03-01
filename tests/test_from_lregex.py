@@ -9,7 +9,7 @@ def test_start():
 
 
 def test_choice():
-    long = "choice ( %ab )"
+    long = "option ( %ab )"
     short = "[ab]"
     assert from_lregex(long) == short
 
@@ -21,7 +21,7 @@ def test_range():
 
 
 def test_poker_hands():
-    long = "start choice ( %a range ( 2 9 ) %tjqk ) repeatExactly 5 end"
+    long = "start option ( %a range ( 2 9 ) %tjqk ) repeatExactly 5 end"
     short = "^[a2-9tjqk]{5}$"
     assert from_lregex(long) == short
 
@@ -34,16 +34,16 @@ def test_long_match_2():
 
 def test_get_number():
     # e.g. -7, 3, 4 -10 etc
-    long = "choice ( %-+ ) min0max1 digit min1"
+    long = "option ( %-+ ) max1 digit min1"
     short = r"[-+]?\d+"
     assert from_lregex(long) == short
 
 
 def test_long_match_3():
     long = ""
-    long += "choice ( %-+ ) min0max1 "
-    a = r"%0 choice ( %xX ) choice ( digit range ( A F ) range ( a f ) ) min1 "
-    b = r"%0 choice ( range ( 0 7 ) ) min0 "
+    long += "option ( %-+ ) max1 "
+    a = r"%0 option ( %xX ) option ( digit range ( A F ) range ( a f ) ) min1 "
+    b = r"%0 option ( range ( 0 7 ) ) min0 "
     c = "digit min1 "
     long += f"capture ( {a} or {b} or {c})"
     short = r"[-+]?(0[xX][\dA-Fa-f]+|0[0-7]*|\d+)"
@@ -57,7 +57,7 @@ def test_non_greedy():
 
 
 def test_non_backtrack():
-    long = "%1 min0 nonBacktrack"
+    long = "%1 min0 xBacktrack"
     short = "1*+"
     assert from_lregex(long) == short
 
@@ -95,7 +95,7 @@ def test_detect_double_words():
 
 
 def test_negative_lookahead():
-    long = r"anyChar min0 choice ( anyChar ) negativeLookAhead ( %bat end ) negateChoice ( anyChar ) min0 end"
+    long = r"anyChar min0 option ( anyChar ) xLookAhead ( %bat end ) xOption ( anyChar ) min0 end"
     short = r".*[.](?!bat$)[^.]*$"
     assert from_lregex(long) == short
 
@@ -107,7 +107,7 @@ def test_positive_lookahead():
 
 
 def test_non_capture():
-    long = r"nonCapture ( %Hello )"
+    long = r"xCapture ( %Hello )"
     short =r"(?:Hello)"
     assert from_lregex(long) == short
 
@@ -134,3 +134,15 @@ def test_example_readme_code_1():
     example_text = "23 1 45 92 13 ABCdef"
     pattern = from_lregex(r"digit repeatExactly 2")
     assert re.findall(pattern, example_text) == ["23", "45", "92", "13"]
+
+
+def test_email_example():
+    long = r"word min1 %@ word min1 %. option ( %com or %co.uk )"
+    short = r"\w+@\w+\.[com|co\.uk]"
+    assert from_lregex(long) == short
+
+
+def test_escape_backslash():
+    long = "%\\"
+    short = "\\"
+    assert from_lregex(long) == short

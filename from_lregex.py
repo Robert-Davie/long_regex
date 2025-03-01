@@ -10,6 +10,8 @@ def from_lregex(input_in):
             continue
         if current_word[0] == "%":
             temp = current_word[1:]
+            for i in ".":
+                temp = temp.replace(i, "\\" + i )
             total.append(temp)
         if len(current_word) == 6 and current_word[:5] == "group":
             total.append("\\" + current_word[5])
@@ -27,19 +29,19 @@ def from_lregex(input_in):
                     total.append("(?=")
                     pointer += 1
                     bracket_stack.append(")")
-            case "negativeLookAhead":
+            case "xLookAhead":
                 if input_in[pointer + 1] == "(":
                     total.append("(?!")
                     pointer += 1
                     bracket_stack.append(")")
-            case "negateChoice":
+            case "xOption":
                 if input_in[pointer + 1] == "(":
                     total.append("[^")
                     pointer += 1
                     bracket_stack.append("]")
             case "min0":
                 total.append("*")
-            case "min0max1":
+            case "max1":
                 total.append("?")
             case "min1":
                 total.append("+")
@@ -49,19 +51,19 @@ def from_lregex(input_in):
                 total.append("$")
             case "boundary":
                 total.append("\\b")
-            case "nonBoundary":
+            case "xBoundary":
                 total.append("\\B")
             case "digit":
                 total.append("\\d")
-            case "nonDigit":
+            case "xDigit":
                 total.append("\\D")
             case "space":
                 total.append("\\s")
-            case "nonSpace":
+            case "xSpace":
                 total.append("\\S")
             case "word":
                 total.append("\\w")
-            case "Word":
+            case "xWord":
                 total.append("\\W")
             case "repeatExactly":
                 total.append("{" + input_in[pointer + 1] + "}")
@@ -83,7 +85,7 @@ def from_lregex(input_in):
                 ]):
                     total.append(f"{input_in[pointer + 2]}-{input_in[pointer + 3]}")
                     pointer += 4
-            case "choice":
+            case "option":
                 if input_in[pointer + 1] == "(":
                     total.append("[")
                     pointer += 1
@@ -93,7 +95,7 @@ def from_lregex(input_in):
                     total.append("(")
                     pointer += 1
                     bracket_stack.append(")")
-            case "nonCapture":
+            case "xCapture":
                 if input_in[pointer + 1] == "(":
                     total.append("(?:")
                     pointer += 1
@@ -108,7 +110,7 @@ def from_lregex(input_in):
                 pointer += 1
             case "nonGreedy":
                 total.append("?")
-            case "nonBacktrack":
+            case "xBacktrack":
                 total.append("+")
             case ")":
                 total.append(bracket_stack.pop())

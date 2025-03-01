@@ -1,6 +1,6 @@
 # LRegex (Long Regex)
 
-This is an alternative to regex which avoids the cryptic strings. The module provides a function to convert LRegex into Standard Python Regex.
+An alternative to regex which avoids the cryptic strings. The module provides a function to convert LRegex into Standard Python Regex.
 
 e.g. to find a two digit number in LRegex you could write:
 
