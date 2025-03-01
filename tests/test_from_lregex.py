@@ -146,3 +146,8 @@ def test_escape_backslash():
     long = "%\\"
     short = "\\"
     assert from_lregex(long) == short
+
+
+def test_escaped_punctuation():
+    long = r"%.^$|?*()[]{}+"
+    short = r"\.\^\$\|\?\*\(\)\[\]\{\}\+"
