@@ -51,6 +51,32 @@ def test_long_match_3():
     assert from_lregex(long) == short
 
 
+def test_long_match_pretty_format():
+    long = r"""
+        choice ( %-+ ) max1
+        capture (
+                %0 
+                choice ( %xX ) 
+                choice ( 
+                    digit 
+                    range ( A F ) 
+                    range ( a f ) 
+                ) min1 
+            or 
+                %0 
+                choice ( 
+                    range ( 0 7 ) 
+                ) min0 
+            or 
+                digit min1
+        )
+"""
+
+    short = r"[-\+]?(0[xX][\dA-Fa-f]+|0[0-7]*|\d+)"
+    assert from_lregex(long) == short
+
+
+
 def test_x_greedy():
     long = "%1 min1 x_greedy"
     short = "1+?"
@@ -160,3 +186,14 @@ def test_invalid_syntax():
     with pytest.raises(LregexSyntaxException) as e:
         from_lregex("abc")
     assert str(e.value) == "'abc' is not a valid word in lregex"
+
+
+def test_pattern_extra_space():
+    assert from_lregex("%a  %b") == "ab"
+
+def test_pattern_with_internal_newline():
+    assert from_lregex("""
+%a
+
+%b
+""") == "ab"

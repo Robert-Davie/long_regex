@@ -1,4 +1,5 @@
 from valid_words import ValidWords
+import re
 
 class LregexSyntaxException(Exception):
     def __init__(self, message):
@@ -6,6 +7,7 @@ class LregexSyntaxException(Exception):
 
 
 def from_lregex(input_in):
+    input_in = re.sub("\\s", " ", input_in)
     input_in = input_in.split(" ")
     pointer = 0
     total = []
