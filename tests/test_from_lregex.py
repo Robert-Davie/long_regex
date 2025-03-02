@@ -1,5 +1,6 @@
-from from_lregex import from_lregex
+from lregex.from_lregex import from_lregex, LregexSyntaxException
 import re
+import pytest
 
 
 def test_start():
@@ -152,3 +153,10 @@ def test_escaped_punctuation():
     long = r"%.^$|?*()[]{}+"
     short = r"\.\^\$\|\?\*\(\)\[\]\{\}\+"
     assert from_lregex(long) == short
+
+
+def test_invalid_syntax():
+    # fails as %abc is valid but not abc on its own
+    with pytest.raises(LregexSyntaxException) as e:
+        from_lregex("abc")
+    assert str(e.value) == "'abc' is not a valid word in lregex"

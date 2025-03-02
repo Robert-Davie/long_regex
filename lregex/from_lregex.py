@@ -1,5 +1,9 @@
 from valid_words import ValidWords
 
+class LregexSyntaxException(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+
 
 def from_lregex(input_in):
     input_in = input_in.split(" ")
@@ -19,8 +23,12 @@ def from_lregex(input_in):
             for i in ".^$|?*()[]{}+":
                 temp = temp.replace(i, "\\" + i )
             total.append(temp)
+            pointer += 1
+            continue
         if len(current_word) == 6 and current_word[:5] == "group":
             total.append("\\" + current_word[5])
+            pointer += 1
+            continue
         match current_word:
             case ValidWords.STRING_START.value:
                 total.append("\\A")
@@ -120,6 +128,8 @@ def from_lregex(input_in):
                 total.append("+")
             case ")":
                 total.append(bracket_stack.pop())
+            case _ as e:
+                raise LregexSyntaxException(f"'{e}' is not a valid word in lregex")
         pointer += 1
     res = "".join(total)
     return res

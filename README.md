@@ -1,20 +1,20 @@
-# LRegex (Long Regex)
+# lregex (Long Regex)
 
-An alternative to regex which avoids the cryptic strings. The module provides a function to convert LRegex into Standard Python Regex.
+An alternative to regex which avoids the cryptic strings. lregex provides a wrapper around the regex (re) module, but uses an alternative syntax. 
 
-e.g. to find a two digit number in LRegex you could write:
+for example, the lregex syntax to find a two digit number is:
 
 ```
 digit repeat_exactly 2
 ```
 
-and then translate into normal regex using the ```from_lregex``` function.
-
+so to find all matches on a string you can use the findall function: 
 ```
-example_text = "23 1 45 92 13 ABCdef"
+import lregex
 
-pattern = from_lregex(r"digit repeat_exactly 2")
-re.findall(pattern, example_text)
+lregex.findall("digit repeat_exactly 2", "23 1 45 92 13 ABCdef")
 ```
 returns
 ```["23", "45", "92", "13"]```
+
+a full list of all possible commands is given in the MANUAL.md
