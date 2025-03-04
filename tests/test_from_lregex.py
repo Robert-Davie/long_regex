@@ -76,7 +76,6 @@ def test_long_match_pretty_format():
     assert from_lregex(long) == short
 
 
-
 def test_x_greedy():
     long = "%1 min1 x_greedy"
     short = "1+?"
@@ -116,9 +115,9 @@ def test_boundary():
 def test_detect_double_words():
     long = "boundary capture ( word min1 ) whitespace min1 group1 boundary"
     short = from_lregex(long)
-    assert short == r'\b(\w+)\s+\1\b'
+    assert short == r"\b(\w+)\s+\1\b"
     p = re.compile(short)
-    assert p.search('Paris in the the spring').group() == 'the the'
+    assert p.search("Paris in the the spring").group() == "the the"
 
 
 def test_negative_lookahead():
@@ -135,7 +134,7 @@ def test_positive_lookahead():
 
 def test_non_capture():
     long = r"x_capture ( %Hello )"
-    short =r"(?:Hello)"
+    short = r"(?:Hello)"
     assert from_lregex(long) == short
 
 
@@ -191,13 +190,19 @@ def test_invalid_syntax():
 def test_pattern_extra_space():
     assert from_lregex("%a  %b") == "ab"
 
-def test_pattern_with_internal_newline():
-    assert from_lregex("""
-%a
 
-%b
-""") == "ab"
-    
+def test_pattern_with_internal_newline():
+    string = """
+             %a
+
+             %b
+             """
+    assert (
+        from_lregex(string)
+        == "ab"
+    )
+
+
 def test_x_boundary():
     assert from_lregex("x_boundary") == r"\B"
 

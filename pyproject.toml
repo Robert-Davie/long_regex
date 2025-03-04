@@ -16,4 +16,8 @@ testpaths = [
 dev = [
     "pytest>=8.3.5",
     "pytest-cov>=6.0.0",
+    "ruff>=0.9.9",
 ]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]

@@ -1,6 +1,7 @@
 from src.lregex.valid_words import ValidWords
 import re
 
+
 class LregexSyntaxException(Exception):
     def __init__(self, message):
         super().__init__(message)
@@ -23,7 +24,7 @@ def from_lregex(input_in):
         if current_word[0] == ValidWords.PERCENT.value:
             temp = current_word[1:]
             for i in ".^$|?*()[]{}+":
-                temp = temp.replace(i, "\\" + i )
+                temp = temp.replace(i, "\\" + i)
             total.append(temp)
             pointer += 1
             continue
@@ -41,7 +42,7 @@ def from_lregex(input_in):
             case ValidWords.OR.value:
                 total.append("|")
             case ValidWords.LOOK_AHEAD.value:
-                if next_word== "(":
+                if next_word == "(":
                     total.append("(?=")
                     pointer += 1
                     bracket_stack.append(")")
@@ -88,17 +89,13 @@ def from_lregex(input_in):
                 total.append("{" + next_word + ",}")
                 pointer += 1
             case ValidWords.REPEAT.value:
-                if all([
-                    next_word == "(",
-                    input_in[pointer + 4] == ")"
-                ]):
-                    total.append("{" + f"{input_in[pointer + 2]},{input_in[pointer + 3]}" + "}")
+                if all([next_word == "(", input_in[pointer + 4] == ")"]):
+                    total.append(
+                        "{" + f"{input_in[pointer + 2]},{input_in[pointer + 3]}" + "}"
+                    )
                     pointer += 4
             case ValidWords.RANGE.value:
-                if all([
-                    next_word == "(",
-                    input_in[pointer + 4] == ")"
-                ]):
+                if all([next_word == "(", input_in[pointer + 4] == ")"]):
                     total.append(f"{input_in[pointer + 2]}-{input_in[pointer + 3]}")
                     pointer += 4
             case ValidWords.CHOICE.value:

@@ -11,7 +11,11 @@ def test_escape():
 
 
 def test_findall():
-    assert lregex.findall(r"%abc word min0", r"abcDEF abc ab ZabcZ") == ["abcDEF", "abc", "abcZ"]
+    assert lregex.findall(r"%abc word min0", r"abcDEF abc ab ZabcZ") == [
+        "abcDEF",
+        "abc",
+        "abcZ",
+    ]
 
 
 def test_finditer():
@@ -29,7 +33,7 @@ def test_fullmatch():
 
 def test_not_fullmatch():
     pattern = "%abc"
-    assert lregex.fullmatch(pattern, "ZabcZ") == None
+    assert lregex.fullmatch(pattern, "ZabcZ") is None
 
 
 def test_match():
