@@ -197,3 +197,18 @@ def test_pattern_with_internal_newline():
 
 %b
 """) == "ab"
+    
+def test_x_boundary():
+    assert from_lregex("x_boundary") == r"\B"
+
+
+def test_x_digit():
+    assert from_lregex("x_digit") == r"\D"
+
+
+def test_x_whitespace():
+    assert from_lregex("x_whitespace") == r"\S"
+
+
+def test_x_word():
+    assert from_lregex("x_word") == r"\W"

@@ -49,5 +49,5 @@ def test_sub():
     assert lregex.sub("%ab", "cd", "eabababf", 2) == "ecdcdabf"
 
 
-def test_sub():
+def test_subn():
     assert lregex.subn("%ab", "cd", "eabababf", 0) == ("ecdcdcdf", 3)

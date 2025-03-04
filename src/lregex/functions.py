@@ -31,10 +31,6 @@ def match(pattern, string):
     return re.match(pattern, string)
 
 
-def purge():
-    return re.purge()
-
-
 def search(pattern, string):
     pattern = from_lregex(pattern)
     return re.search(pattern, string)
@@ -47,7 +43,7 @@ def split(pattern, string):
 
 def sub(pattern, repl, string, count):
     pattern = from_lregex(pattern)
-    return re.sub(pattern, repl, string, count)
+    return re.sub(pattern, repl, string, count=count)
 
 
 def subn(pattern, repl, string, count):
