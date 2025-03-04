@@ -1,1 +1,0 @@
-from lregex.functions import full_compile, escape, findall, finditer, fullmatch, match, purge, search, split, sub, subn

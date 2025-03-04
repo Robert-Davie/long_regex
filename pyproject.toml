@@ -1,5 +1,18 @@
+[project]
+name = "long-regex"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
 [tool.pytest.ini_options]
 addopts = "--ignore=ideas/"
 testpaths = [
     "tests"
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
 ]

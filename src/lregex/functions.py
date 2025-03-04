@@ -1,5 +1,5 @@
 import re
-from lregex.from_lregex import from_lregex
+from src.lregex.from_lregex import from_lregex
 
 
 def full_compile(pattern):

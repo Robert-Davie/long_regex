@@ -1,4 +1,4 @@
-from valid_words import ValidWords
+from src.lregex.valid_words import ValidWords
 import re
 
 class LregexSyntaxException(Exception):
