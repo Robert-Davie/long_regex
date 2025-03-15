@@ -7,7 +7,7 @@ class LregexSyntaxException(Exception):
         super().__init__(message)
 
 
-def from_lregex(input_in):
+def lregex_to_regex(input_in):
     input_in = re.sub("\\s", " ", input_in)
     input_in = input_in.split(" ")
     pointer = 0

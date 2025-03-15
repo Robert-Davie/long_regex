@@ -10,3 +10,4 @@ from .functions import (
     sub,
     subn,
 )
+from .lregex_to_regex import lregex_to_regex

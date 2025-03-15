@@ -27,7 +27,7 @@
 | x_boundary | \B | not a boundary of a word |
 | repeat (... ...) | {...,...} | repeat between n1 and n2 times | 
 | repeat_exactly ( ... ) | {...} | repeat exactly n times |
-| at_least ( ... ) | {...,} | repeat minimum n times |
+| at_least ... | {...,} | repeat minimum n times |
 | range ( ... ... ) | ...-... | range of characters e.g. a-z |
 | choice ( ... ) | [\...] | choose any option |
 | x_choice ( ... ) | [\^...] | choose any option except |
