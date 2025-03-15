@@ -33,6 +33,17 @@ def from_lregex(input_in):
             pointer += 1
             continue
         match current_word:
+            case ValidWords.SPACE.value:
+                total.append(" ")
+            case ValidWords.LITERAL.value:
+                temp = []
+                pointer += 2
+                next_word = input_in[pointer]
+                while next_word != ")":
+                    temp.append(next_word)
+                    pointer += 1
+                    next_word = input_in[pointer]
+                total.append(" ".join(temp))
             case ValidWords.STRING_START.value:
                 total.append("\\A")
             case ValidWords.STRING_END.value:

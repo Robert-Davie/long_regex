@@ -4,6 +4,8 @@ from enum import Enum
 class ValidWords(Enum):
     START = "start"
     END = "end"
+    SPACE = "space"
+    LITERAL = "literal"
     DIGIT = "digit"
     X_DIGIT = "x_digit"
     WHITESPACE = "whitespace"

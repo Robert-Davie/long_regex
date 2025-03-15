@@ -6,11 +6,13 @@
 | end | $ | End of line |
 | digit | \d | digit |
 | x_digit | \D | not a digit |
-| whitespace | \s | a space character |
-| x_whitespace | \S | not a space character |
+| space |   | a literal space character |
+| whitespace | \s | a whitespace character |
+| x_whitespace | \S | not a whitespace character |
 | word | \w | a word character |
 | x_word | \W | not a word character |
 | %ABCabc | ABCabc | use % sign to write string of characters |
+| literal ( ... ) | ... | copy a string exactly (useful for strings with spaces) |
 | group2 | \2 | reference nth group from 1 to 9, here n=2 |
 | string_start | \A | Start of line (differnt to ^ in multiline mode) |
 | string_end | \Z | End of line (different to $ in multiline mode) |

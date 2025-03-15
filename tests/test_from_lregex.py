@@ -217,3 +217,23 @@ def test_x_whitespace():
 
 def test_x_word():
     assert from_lregex("x_word") == r"\W"
+
+
+def test_space():
+    assert from_lregex("space") == r" "
+
+
+def test_two_words():
+    assert from_lregex("%two space %words") == r"two words"
+
+
+def test_literal():
+    assert from_lregex("literal ( two words )") == r"two words"
+
+
+def test_literal_three_words():
+    assert from_lregex("literal ( three words given )") == r"three words given"
+
+
+def test_literal_with_percent_and_hyphen():
+    assert from_lregex(r"literal ( 100% complex-literal )") == r"100% complex-literal"
