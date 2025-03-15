@@ -16,8 +16,8 @@ def test_choice():
 
 
 def test_range():
-    long = "range ( 1 7 )"
-    short = "1-7"
+    long = "choice ( range ( 1 7 ) )"
+    short = "[1-7]"
     assert lregex_to_regex(long) == short
 
 
@@ -237,3 +237,9 @@ def test_literal_three_words():
 
 def test_literal_with_percent_and_hyphen():
     assert lregex_to_regex(r"literal ( 100% complex-literal )") == r"100% complex-literal"
+
+
+def test_range_not_inside_choice_invalid():
+    with pytest.raises(LregexSyntaxException) as e:
+        lregex_to_regex(r"range ( a z )")
+    assert str(e.value) == "range may only be used inside choice or x_choice"

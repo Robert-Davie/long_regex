@@ -106,6 +106,8 @@ def lregex_to_regex(input_in):
                     )
                     pointer += 4
             case ValidWords.RANGE.value:
+                if "]" not in bracket_stack:
+                    raise LregexSyntaxException("range may only be used inside choice or x_choice")
                 if all([next_word == "(", input_in[pointer + 4] == ")"]):
                     total.append(f"{input_in[pointer + 2]}-{input_in[pointer + 3]}")
                     pointer += 4
