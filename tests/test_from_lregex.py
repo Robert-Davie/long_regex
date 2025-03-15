@@ -1,4 +1,4 @@
-from src.lregex.from_lregex import from_lregex, LregexSyntaxException
+from lregex.from_lregex import from_lregex, LregexSyntaxException
 import re
 import pytest
 

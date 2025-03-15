@@ -1,4 +1,4 @@
-from src.lregex.functions import (
+from .functions import (
     full_compile,
     escape,
     findall,

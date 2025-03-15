@@ -1,4 +1,4 @@
-import src.lregex as lregex
+import lregex
 import re
 
 

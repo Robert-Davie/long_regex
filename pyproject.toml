@@ -11,6 +11,9 @@ addopts = "--ignore=ideas/"
 testpaths = [
     "tests"
 ]
+pythonpath = [
+  "src"
+]
 
 [dependency-groups]
 dev = [

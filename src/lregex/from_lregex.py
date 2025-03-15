@@ -1,4 +1,4 @@
-from src.lregex.valid_words import ValidWords
+from .valid_words import ValidWords
 import re
 
 
