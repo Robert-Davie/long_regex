@@ -243,3 +243,9 @@ def test_range_not_inside_choice_invalid():
     with pytest.raises(LregexSyntaxException) as e:
         lregex_to_regex(r"range ( a z )")
     assert str(e.value) == "range may only be used inside choice or x_choice"
+
+
+def test_capture_and_range():
+    long = "capture ( choice ( range ( A Z ) ) )"
+    short = "([A-Z])"
+    assert lregex_to_regex(long) == short

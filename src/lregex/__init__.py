@@ -11,4 +11,4 @@ from .functions import (
     subn,
 )
 from .lregex_to_regex import lregex_to_regex
-from .re_to_lregex import re_to_lregex
+from .re_to_lregex import re_to_lregex, pretty_lregex

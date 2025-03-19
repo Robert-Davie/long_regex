@@ -107,7 +107,7 @@ def lregex_to_regex(input_in):
                     pointer += 4
             case ValidWords.RANGE.value:
                 if "]" not in bracket_stack:
-                    raise LregexSyntaxException("range may only be used inside choice or x_choice")
+                    raise LregexSyntaxException(f"range may only be used inside choice or x_choice")
                 if all([next_word == "(", input_in[pointer + 4] == ")"]):
                     total.append(f"{input_in[pointer + 2]}-{input_in[pointer + 3]}")
                     pointer += 4
@@ -121,7 +121,7 @@ def lregex_to_regex(input_in):
                     total.append("(")
                     pointer += 1
                     bracket_stack.append(")")
-                if input_in[pointer + 2] == '(':
+                elif input_in[pointer + 2] == '(':
                     total.append(f"(?P<{input_in[pointer + 1]}>")
                     pointer += 2
                     bracket_stack.append(")")
@@ -130,11 +130,6 @@ def lregex_to_regex(input_in):
                     total.append("(?:")
                     pointer += 1
                     bracket_stack.append(")")
-            # case ValidWords.NAMED_CAPTURE.value:
-            #     if next_word == "(":
-            #         total.append(f"(?P<{input_in[pointer + 2]}>")
-            #         pointer += 2
-            #         bracket_stack.append(")")
             case ValidWords.REUSE_CAPTURE.value:
                 total.append(f"(?P={next_word})")
                 pointer += 1

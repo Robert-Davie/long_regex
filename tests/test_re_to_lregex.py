@@ -1,4 +1,4 @@
-from lregex.re_to_lregex import re_to_lregex
+from lregex.re_to_lregex import re_to_lregex, indent
 
 
 def test_digit():
@@ -232,4 +232,102 @@ def test_reuse_capture():
 def test_capture_with_name():
     long = r"capture banana ( %t )"
     short = r"(?P<banana>t)"
+    assert re_to_lregex(short) == long
+
+
+def test_dash_non_range():
+    long = r"%hello-world"
+    short = r"hello-world"
+    assert re_to_lregex(short) == long
+
+
+def test_hat_in_choice():
+    long = r"choice ( %a^ )"
+    short = r"[a^]"
+    assert re_to_lregex(short) == long
+
+
+def test_indent():
+    initial = "( apple )"
+    expected = \
+"""
+(
+    apple
+)
+"""
+    assert indent(initial).strip() == expected.strip()
+
+
+def test_double_indent():
+    initial = "food ( apple ( banana ) citrus )"
+    expected = \
+"""
+food (
+    apple (
+        banana
+    )
+    citrus
+)
+"""
+    assert indent(initial).strip() == expected.strip()
+
+
+def test_triple_indent():
+    initial = "food ( apple ( ( banana ) ) citrus )"
+    expected = \
+"""
+food (
+    apple (
+        (
+            banana
+        )
+    )
+    citrus
+)
+"""
+    assert indent(initial).strip() == expected.strip()
+
+
+def test_two_bracket_indent():
+    initial = "( ( ) )"
+    expected = \
+"""
+(
+    (
+    )
+)
+"""
+    assert indent(initial).strip() == expected.strip()
+
+
+def test_two_bracket_indent_with_word():
+    initial = "( ( ) fox )"
+    expected = \
+"""
+(
+    (
+    )
+    fox
+)
+"""
+    assert indent(initial).strip() == expected.strip()
+
+
+def test_three_bracket_indent():
+    initial = "( ( ( ) ) )"
+    expected = \
+"""
+(
+    (
+        (
+        )
+    )
+)
+"""
+    assert indent(initial).strip() == expected.strip()
+
+
+def test_ampersand():
+    long = "%&"
+    short = r"\&"
     assert re_to_lregex(short) == long

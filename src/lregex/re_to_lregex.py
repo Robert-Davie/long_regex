@@ -1,5 +1,6 @@
 from string import punctuation, ascii_letters, digits
 from .lregex_to_regex import LregexSyntaxException
+import re
 
 
 METACHARACTERS = r".|*+?()[]{}^$-"
@@ -7,6 +8,8 @@ NON_METACHARACTERS = "".join([i for i in ascii_letters + digits + punctuation if
 
 
 def re_to_lregex(string_in: str) -> str:
+    if string_in != " ":
+        string_in = string_in.strip()
     pointer = 0
     iteration_counter = 0  # prevent infinite loop
     res = []
@@ -16,8 +19,10 @@ def re_to_lregex(string_in: str) -> str:
             raise Exception("LRegex Failure: infinite loop detected")
         iteration_counter += 1
         current_letter = string_in[pointer]
-        if choice_mode and current_letter == '-':
-            if res[-1][0] == "%":
+        if current_letter == '-':
+            pass
+        if current_letter == '-':
+            if choice_mode and res[-1][0] == "%":
                 temp = res[-1][-1]
                 res[-1] = res[-1][:-1]
                 if res[-1] == "%":
@@ -28,13 +33,35 @@ def re_to_lregex(string_in: str) -> str:
                 res.append(string_in[pointer + 1])
                 res.append(")")
                 pointer += 2
+            else:
+                if res and res[-1][0] == '%':
+                    res[-1] = res[-1] + '-'
+                    pointer += 1
+                else:
+                    res.append("%-")
+                    pointer += 1
+            continue
+        if choice_mode:
+            match current_letter:
+                case '^':
+                    if res and res[-1][0] == '%':
+                        res[-1] = res[-1] + '^'
+                        pointer += 1
+                    else:
+                        res.append("%^")
+                        pointer += 1
+                    continue
         if current_letter in NON_METACHARACTERS:
-            temp = f"%{current_letter}"
-            pointer += 1
-            while pointer < len(string_in) and string_in[pointer] in NON_METACHARACTERS:
-                temp = temp + string_in[pointer]
+            if res and res[-1][0] == "%":
+                res[-1] = res[-1] + current_letter
                 pointer += 1
-            res.append(temp)
+            else:
+                temp = f"%{current_letter}"
+                pointer += 1
+                while pointer < len(string_in) and string_in[pointer] in NON_METACHARACTERS:
+                    temp = temp + string_in[pointer]
+                    pointer += 1
+                res.append(temp)
             continue
         match string_in[pointer]:
             case '*' | '?' | '+':
@@ -151,7 +178,7 @@ def re_to_lregex(string_in: str) -> str:
                     res.append(f"group{string_in[pointer]}")
                     pointer += 1
                     continue
-                if string_in[pointer] in METACHARACTERS:
+                if string_in[pointer] in METACHARACTERS + "".join([i for i in punctuation if i != '\\']):
                     if res and res[-1][0] == "%":
                         res[-1] = res[-1] + string_in[pointer]
                     else:
@@ -196,5 +223,54 @@ def re_to_lregex(string_in: str) -> str:
                             res.append(r"%\\")
                         pointer += 1
             case _ as e:
-                raise LregexSyntaxException(message=f"{e} appears to be invalid")
+                raise LregexSyntaxException(message=f"{e} appears to be invalid at position {pointer}")
     return " ".join(res)
+
+
+def pretty_lregex(str_in):
+    bold = '\033[1m'
+    underline = '\033[4m'
+    red = '\033[91m'
+    reset = '\033[0m'
+    green = '\033[32m'
+    yellow = '\033[33m'
+    lime_green = '\033[38;5;150m'
+    blue = '\033[34m'
+    magenta = '\033[35m'
+    cyan = '\033[36m'
+    orange = '\033[38;5;208m'
+    str_in = re.sub(r"\bx_\B", f"{red}x_{reset}", str_in)
+    str_in = re.sub("(named_capture|capture)", f"{bold}{orange}\\1{reset}", str_in)
+    str_in = re.sub(r"(choice|range|look_ahead|\bor\b)", f"{bold}{magenta}\\1{reset}", str_in)
+    str_in = re.sub(r"(%\S+)", f"{bold}{lime_green}\\1{reset}", str_in)
+    str_in = re.sub("(any_char|digit|word|whitespace)", f"{bold}{green}\\1{reset}", str_in)
+    str_in = re.sub("(start|end)", f"{yellow}\\1{reset}", str_in)
+    str_in = re.sub("\bspace\b", f"{green}space{reset}", str_in)
+    str_in = re.sub("(?<= )([A-Za-z])(?= )", f"{green}\\1{reset}", str_in)
+    str_in = re.sub(r"(min1|min0|max1|(?<= )\d+(?= )|repeat_between|repeat_exactly|repeat_min|greedy)", f"{blue}\\1{reset}", str_in)
+    
+    str_in = indent(str_in)
+    
+    return str_in
+
+
+def indent(str_in):
+    original = str_in
+    indent = 0
+    res = ""
+    skip = False
+    for letter in original:
+        if skip:
+            skip = False
+            continue
+        if letter == "(":
+            indent += 1
+            res = res + f"(\n{' ' * indent * 4}"
+            skip = True
+        elif letter == ")":
+            indent -= 1
+            res = res.strip() + f"\n{' ' * indent * 4})\n{' ' * indent * 4}"
+            skip = True
+        else:
+            res = res + letter
+    return res
