@@ -96,10 +96,10 @@ def lregex_to_regex(input_in):
             case ValidWords.REPEAT_EXACTLY.value:
                 total.append("{" + next_word + "}")
                 pointer += 1
-            case ValidWords.AT_LEAST.value:
+            case ValidWords.REPEAT_MIN.value:
                 total.append("{" + next_word + ",}")
                 pointer += 1
-            case ValidWords.REPEAT.value:
+            case ValidWords.REPEAT_BETWEEN.value:
                 if all([next_word == "(", input_in[pointer + 4] == ")"]):
                     total.append(
                         "{" + f"{input_in[pointer + 2]},{input_in[pointer + 3]}" + "}"
@@ -121,16 +121,20 @@ def lregex_to_regex(input_in):
                     total.append("(")
                     pointer += 1
                     bracket_stack.append(")")
+                if input_in[pointer + 2] == '(':
+                    total.append(f"(?P<{input_in[pointer + 1]}>")
+                    pointer += 2
+                    bracket_stack.append(")")
             case ValidWords.X_CAPTURE.value:
                 if next_word == "(":
                     total.append("(?:")
                     pointer += 1
                     bracket_stack.append(")")
-            case ValidWords.NAMED_CAPTURE.value:
-                if next_word == "(":
-                    total.append(f"(?P<{input_in[pointer + 2]}>")
-                    pointer += 2
-                    bracket_stack.append(")")
+            # case ValidWords.NAMED_CAPTURE.value:
+            #     if next_word == "(":
+            #         total.append(f"(?P<{input_in[pointer + 2]}>")
+            #         pointer += 2
+            #         bracket_stack.append(")")
             case ValidWords.REUSE_CAPTURE.value:
                 total.append(f"(?P={next_word})")
                 pointer += 1

@@ -25,15 +25,15 @@
 | ... min1 | ...+ | appear at least once |
 | boundary | \b | boundary of a word |
 | x_boundary | \B | not a boundary of a word |
-| repeat (... ...) | {...,...} | repeat between n1 and n2 times | 
-| repeat_exactly ( ... ) | {...} | repeat exactly n times |
-| at_least ... | {...,} | repeat minimum n times |
+| repeat_between (... ...) | {...,...} | repeat between n1 and n2 times | 
+| repeat_exactly ... | {...} | repeat exactly n times |
+| repeat_min ... | {...,} | repeat minimum n times |
 | range ( ... ... ) | ...-... | range of characters e.g. a-z |
 | choice ( ... ) | [\...] | choose any option |
 | x_choice ( ... ) | [\^...] | choose any option except |
 | capture ( ... ) | (...) | capture a group |
 | x_capture ( ... ) | (?:...) | ignore group for capturing |
-| named_capture ( group_name ... ) | (?P\<group_name\>...) | name a capture group |
+| capture group_name ( ... ) | (?P\<group_name\>...) | name a capture group |
 | reuse_capture ... | (?P=...) | reuse a captured group - alt to using group2 etc |
 | x_greedy | "...?" | choose non greedily |
 | x_backtrack | "...+" | to prevent backtracking behaviour |

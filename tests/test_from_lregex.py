@@ -95,13 +95,13 @@ def test_escaped_percent():
 
 
 def test_repeat_between():
-    long = "%A repeat ( 2 5 )"
+    long = "%A repeat_between ( 2 5 )"
     short = "A{2,5}"
     assert lregex_to_regex(long) == short
 
 
-def test_at_least():
-    long = "%B at_least 12"
+def test_repeat_min():
+    long = "%B repeat_min 12"
     short = "B{12,}"
     assert lregex_to_regex(long) == short
 
@@ -139,13 +139,13 @@ def test_non_capture():
 
 
 def test_named_capture():
-    long = r"named_capture ( my_group %Apple )"
+    long = r"capture my_group ( %Apple )"
     short = r"(?P<my_group>Apple)"
     assert lregex_to_regex(long) == short
 
 
 def test_reuse_capture():
-    long = r"named_capture ( my_group %Apple ) reuse_capture my_group"
+    long = r"capture my_group ( %Apple ) reuse_capture my_group"
     short = r"(?P<my_group>Apple)(?P=my_group)"
     assert lregex_to_regex(long) == short
 

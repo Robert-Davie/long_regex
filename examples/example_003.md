@@ -5,7 +5,7 @@ r"""
 start
 %$ max1
 x_capture (
-        digit repeat ( 1 3 )
+        digit repeat_between ( 1 3 )
         %,
         x_capture (
             digit repeat_exactly 3
