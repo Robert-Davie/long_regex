@@ -245,7 +245,7 @@ def pretty_lregex(str_in):
     str_in = re.sub(r"(%\S+)", f"{bold}{lime_green}\\1{reset}", str_in)
     str_in = re.sub("(any_char|digit|word|whitespace)", f"{bold}{green}\\1{reset}", str_in)
     str_in = re.sub("(start|end)", f"{yellow}\\1{reset}", str_in)
-    str_in = re.sub("\bspace\b", f"{green}space{reset}", str_in)
+    str_in = re.sub("(?<= )space(?= )", f"{green}space{reset}", str_in)
     str_in = re.sub("(?<= )([A-Za-z])(?= )", f"{green}\\1{reset}", str_in)
     str_in = re.sub(r"(min1|min0|max1|(?<= )\d+(?= )|repeat_between|repeat_exactly|repeat_min|greedy)", f"{blue}\\1{reset}", str_in)
     
